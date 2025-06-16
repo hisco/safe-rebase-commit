@@ -1,0 +1,42 @@
+name: "Git Safe Rebase Commit"
+description: "Safely stash, rebase, commit, and push changes with retry logic."
+author: "Your Name or Org"
+inputs:
+  path:
+    description: "Working directory"
+    required: false
+    default: "."
+  commit_message:
+    description: "The commit message"
+    required: true
+  commit_user_name:
+    description: "Git user.name"
+    required: false
+    default: "github-actions[bot]"
+  commit_user_email:
+    description: "Git user.email"
+    required: false
+    default: "github-actions[bot]@users.noreply.github.com"
+  file_pattern:
+    description: "File pattern to stage"
+    required: false
+    default: "."
+  max_retries:
+    description: "Max retry attempts for pushing"
+    required: false
+    default: "3"
+
+runs:
+  using: "composite"
+  steps:
+    - run: |
+        chmod +x ${{ github.action_path }}/entrypoint.sh
+        ${{ github.action_path }}/entrypoint.sh
+      shell: bash
+      working-directory: ${{ inputs.path }}
+      env:
+        COMMIT_MESSAGE: ${{ inputs.commit_message }}
+        COMMIT_USER_NAME: ${{ inputs.commit_user_name }}
+        COMMIT_USER_EMAIL: ${{ inputs.commit_user_email }}
+        FILE_PATTERN: ${{ inputs.file_pattern }}
+        MAX_RETRIES: ${{ inputs.max_retries }}
