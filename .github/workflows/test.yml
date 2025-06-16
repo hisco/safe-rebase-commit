@@ -1,0 +1,37 @@
+name: Test Safe Rebase Commit Action
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: write 
+
+jobs:
+  test-action:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create and switch to a test branch
+        run: |
+          git config user.name "test-runner"
+          git config user.email "test@runner.local"
+          BRANCH_NAME="test-${{ github.run_id }}"
+          echo "Using test branch: $BRANCH_NAME"
+          git checkout -b "$BRANCH_NAME"
+          git push --set-upstream origin "$BRANCH_NAME"
+          echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Test changes
+        run: |
+          echo "$BRANCH_NAME" > branch-name.txt
+          echo "Test $(date)" >> test.txt
+
+      - name: Commit and push with action
+        uses: ./
+        with:
+          commit_message: "Automated test commit"
