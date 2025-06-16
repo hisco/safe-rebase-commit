@@ -25,6 +25,10 @@ inputs:
     description: "Max retry attempts for pushing"
     required: false
     default: "3"
+    
+branding:
+  icon: git-commit
+  color: purple
 
 runs:
   using: "composite"
