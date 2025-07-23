@@ -15,10 +15,10 @@ git add "${FILE_PATTERN}"
 
 echo "📝 Committing with message: $COMMIT_MESSAGE"
 GIT_AUTHOR="${COMMIT_USER_NAME} <${COMMIT_USER_EMAIL}>"
+git config user.name "${COMMIT_USER_NAME}"
+git config user.email "${COMMIT_USER_EMAIL}"
 
-git -c user.name="${COMMIT_USER_NAME}" \
-    -c user.email="${COMMIT_USER_EMAIL}" \
-    commit --author="$GIT_AUTHOR" -m "$COMMIT_MESSAGE"
+git commit --author="$GIT_AUTHOR" -m "$COMMIT_MESSAGE"
 
 RETRY_COUNT=0
 echo "🚀 Attempting to push..."
